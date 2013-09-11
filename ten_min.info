@@ -1,0 +1,6 @@
+;https://drupal.org/node/542202
+
+name = 10 minutes module
+description = This module gets current UTC time from <a href="http://www.earthtools.org">http://www.earthtools.org</a>
+core = 7.x
+package = Other

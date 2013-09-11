@@ -1,0 +1,66 @@
+<?php
+
+// https://api.drupal.org/api/drupal/modules!system!system.api.php/function/hook_permission/7
+  function ten_min_permission() {
+    return array(
+      'access 10 min' => array(
+        'title' => t('access 10 min'),
+        'description' => t('Access 10 min content.'),
+      ),
+    );
+  }
+  
+// https://api.drupal.org/api/drupal/modules!system!system.api.php/function/hook_menu/7
+  function ten_min_menu() {
+    $items['ten'] = array(
+      'title' => 'UTC Time',
+      'page callback' => 'myfunction',
+      'access arguments' => array('access 10 min'),
+    );
+
+    return $items;
+  }
+
+// https://api.drupal.org/api/drupal/modules!block!block.api.php/function/hook_block_info/7
+  function ten_min_block_info() {
+    $blocks['tenminutes'] = array(
+      'info' => t('10 minutes modules'),
+      'cache' => DRUPAL_NO_CACHE,
+    );
+    return $blocks;
+  }
+
+// https://api.drupal.org/api/drupal/modules!block!block.api.php/function/hook_block_view/7
+  function ten_min_block_view($delta = '') {
+    // This example is adapted from node.module.
+    $block = array();
+
+    switch ($delta) {
+      case 'tenminutes':
+        $block['subject'] = t('Current GMT Time');
+	    $content = myfunction();
+        $block['content'] = $content;
+      break;
+    }
+    return $block;
+  }
+
+// https://api.drupal.org/api/drupal/modules!node!node.api.php/function/hook_node_view/7
+  function ten_min_node_view($node, $view_mode, $langcode) {
+    $node->content['my_additional_field'] = array(
+      '#markup' => '<strong>' . myfunction() . '<strong>',
+      '#weight' => 10,
+    );
+  }
+
+// Custom function
+  function myfunction(){
+    return 'Current UTC Time : ' . getTime(35.4187,9.9875);
+  }
+
+// getTime function
+  function getTime($latitude, $logitude){
+    $obj = simplexml_load_file("http://www.earthtools.org/timezone/$latitude/$logitude");
+    $date = explode(" ",$obj->utctime[0]);
+    return implode ( " " , $date );
+  }
