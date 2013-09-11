@@ -1,4 +1,4 @@
 10min
 =====
 
-10 minutes module
+Module demo for the Tunisian drupal meetup.
